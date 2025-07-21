@@ -1,13 +1,15 @@
-async function getStockPrice() {
-  const res = await fetch("https://api.stock.example.com/price");
-  const data = await res.json();
-  console.log("Stock price:", data.price);
+function paginate(items, page, limit) {
+  const start = page * limit;
+  const end = start + limit;
+  return items.slice(start, end);
 }
 
-getStockPrice();
+const data = ["a", "b", "c"];
+console.log(paginate(data, 0, 2));
+console.log(paginate(data, -1, 2));
+console.log(paginate(data, 1, -3));
 
-//
 // ❌ 문제점:
-// - fetch 실패 또는 응답 상태가 200이 아닐 경우 오류가 발생하지만 예외 처리가 없음
-// - 네트워크 장애나 API 서버 문제 발생 시 사용자에게 아무런 안내 없이 앱이 중단될 수 있음
-// - 실패 시 fallback 또는 오류 메시지도 제공하지 않음
+// - 음수 page 또는 limit 값 검증 없음
+// - limit가 음수면 slice 인자가 이상하게 작동할 수 있음
+// - 범위를 벗어난 인덱스 접근 시 예상치 못한 빈 배열이나 오류 발생 가능
