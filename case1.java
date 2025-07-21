@@ -1,28 +1,22 @@
-import java.util.concurrent.CompletableFuture;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
 
-public class AsyncService {
-    public static void main(String[] args) {
-        fetchUser().thenAccept(user -> {
-            System.out.println("User name: " + user.name);
-        });
-        System.out.println("Async request sent");
-    }
+public class WeatherFetcher {
+    public static void main(String[] args) throws Exception {
+        URL url = new URL("https://api.weather.example.com/current");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
 
-    public static CompletableFuture<User> fetchUser() {
-        return CompletableFuture.supplyAsync(() -> {
-            throw new RuntimeException("Failed to fetch user");
-        });
-    }
-}
-
-class User {
-    public String name;
-    public User(String name) {
-        this.name = name;
+        Scanner scanner = new Scanner(conn.getInputStream());
+        while (scanner.hasNext()) {
+            System.out.println(scanner.nextLine());
+        }
+        scanner.close();
     }
 }
 
-// 문제 설명:
-// - CompletableFuture 내부에서 예외 발생 시 후속 thenAccept에서 예외 전파됨
-// - exceptionally 또는 handle 메서드를 사용해 예외를 처리하지 않음
-// - 비동기 흐름에서 예외가 누락되면 프로그램 전체 안정성 저하
+// ❌ 문제점:
+// - API 호출 실패 시 IOException 발생 가능하지만 처리하지 않음
+// - 응답 코드가 200이 아닐 경우에도 입력 스트림을 읽어 오류 발생 가능
+// - 사용자에게 실패 안내 없이 프로그램이 종료될 수 있음

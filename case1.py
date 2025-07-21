@@ -1,16 +1,13 @@
-import asyncio
+import requests
 
-async def fetch_data():
-    await asyncio.sleep(1)
-    raise Exception("Network error")
+def fetch_exchange_rate():
+    response = requests.get("https://api.exchangerate.example.com/latest")
+    data = response.json()
+    print("USD to EUR:", data["rates"]["EUR"])
 
-async def main():
-    result = await fetch_data()
-    print("Fetched:", result)
+fetch_exchange_rate()
 
-asyncio.run(main())
-
-# 문제 설명:
-# - fetch_data 내부에서 예외 발생 시 main에서 처리하지 않아 프로그램이 비정상 종료됨
-# - try-except를 통해 예외를 핸들링하지 않음
-# - 비동기 함수 호출 시 오류 발생 가능성 고려되지 않음
+# ❌ 문제점:
+# - 외부 API 호출 실패, 타임아웃, 잘못된 응답이 발생해도 예외 처리가 없음
+# - 요청 실패 시 런타임 에러로 프로그램이 중단될 수 있음
+# - 재시도, fallback 등의 대안 로직 부재
