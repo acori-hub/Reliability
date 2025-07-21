@@ -1,19 +1,15 @@
-def register_user(data):
-    # 사용자 정보 등록 처리 (예: DB 저장)
-    print(f"Registering user: {data['username']} with age {data['age']}")
+def send_welcome_email(user):
+    print(f"Sending welcome email to {user['email']}")
 
-def handle_request():
-    # 외부 입력 예시
-    input_data = {
-        "username": "alice",
-        "age": "twenty"  # 문자열 숫자 아님
+def process_new_user():
+    new_user = {
+        "username": "charlie"
     }
-    register_user(input_data)
+    send_welcome_email(new_user)
 
-handle_request()
+process_new_user()
 
 # 문제 설명:
-# - 'age'가 문자열 "twenty"로 숫자 아님
-# - 숫자 여부 및 값 범위 검증이 없음
-# - 예외 없이 진행되면 논리 오류 발생 가능
-# - 실제 서비스에서는 타입, 형식, 유효 범위 검사가 반드시 필요
+# - user 딕셔너리에 'email' 키가 없음 → KeyError 발생
+# - None 여부, 키 존재 여부 확인 없이 딕셔너리 접근
+# - 필수 값이 누락되었을 때의 방어 코드가 없음

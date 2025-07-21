@@ -1,26 +1,22 @@
-public class UserService {
+public class OrderService {
     public static void main(String[] args) {
-        User user = new User("bob123", "");
-        saveUser(user);
+        Order order = null;
+        printOrderSummary(order);
     }
 
-    public static void saveUser(User user) {
-        // DB 저장 로직 (생략)
-        System.out.println("Saving user " + user.username + " with email " + user.email);
+    public static void printOrderSummary(Order order) {
+        System.out.println("Order amount: " + order.amount);
     }
 }
 
-class User {
-    String username;
-    String email;
+class Order {
+    public int amount;
 
-    public User(String username, String email) {
-        this.username = username;
-        this.email = email;  // 빈 문자열 가능
+    public Order(int amount) {
+        this.amount = amount;
     }
 }
 
 // 문제 설명:
-// - email 필드가 빈 문자열임에도 저장 시도
-// - 이메일 형식 검증이 없음 (@ 포함 여부, 도메인 확인 등)
-// - 유효성 검사 없이 잘못된 데이터가 저장되어 시스템 정합성 깨질 수 있음
+// - order 객체가 null임에도 필드 접근 시도 → NullPointerException 발생
+// - 널 체크 없이 객체 접근하는 전형적인 문제

@@ -1,20 +1,13 @@
-function submitOrder(order) {
-  // 주문 처리 (예: 결제 요청)
-  console.log(`Processing order for quantity: ${order.quantity}`);
-  // 실제 결제 API 호출 생략
+function greetUser(user) {
+  console.log(`Hello, ${user.name.toUpperCase()}!`);
 }
 
-function simulateClientRequest() {
-  const orderData = {
-    productId: "SKU12345",
-    quantity: -3, // 잘못된 입력
-  };
-  submitOrder(orderData);
-}
+const userData = {
+  id: 101,
+};
 
-simulateClientRequest();
+greetUser(userData);
 
 // 문제 설명:
-// - quantity가 음수인데도 검증 없이 처리됨
-// - isNaN, 타입 체크, 값 범위 확인 없음
-// - 악의적인 입력으로 오작동 가능성 있음
+// - user.name이 undefined인 상태에서 toUpperCase() 호출 → TypeError 발생
+// - null/undefined 확인 없이 속성 접근하여 런타임 에러 발생 가능
