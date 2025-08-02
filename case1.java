@@ -1,21 +1,56 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
-public class UserRegistration {
-    public static void registerUser(int age, String email) {
-        System.out.println("User registered: age=" + age + ", email=" + email);
-    }
+class Order {
+    String id;
+    boolean isSavedToFile = false;
+    boolean isPersistedToDB = false;
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter age: ");
-        int age = Integer.parseInt(scanner.nextLine());
-        System.out.print("Enter email: ");
-        String email = scanner.nextLine();
-
-        registerUser(age, email);
+    Order(String id) {
+        this.id = id;
     }
 }
 
-// 문제 설명:
-// age가 음수이거나 0인 경우, 또는 이메일 형식이 잘못돼도 검증 없이 그대로 등록됨.
-// 추후 시스템 오류나 잘못된 동작의 원인이 될 수 있음.
+public class OrderProcessor {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("주문 ID를 입력하세요: ");
+        String orderId = scanner.nextLine();
+
+        Order order = new Order(orderId);
+        processOrder(order);
+    }
+
+    public static void processOrder(Order order) {
+        saveOrderToFile(order);    // 파일 저장
+        saveOrderToDatabase(order); // DB 저장
+
+        System.out.println("주문 처리 완료: " + order.id);
+    }
+
+    public static void saveOrderToFile(Order order) {
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter("orders.txt", true);
+            writer.write("Order ID: " + order.id + "\n");
+            // 파일 저장 성공 표시
+            order.isSavedToFile = true;
+        } catch (IOException e) {
+            System.out.println("파일 저장 중 오류 발생");
+        }
+    }
+
+    public static void saveOrderToDatabase(Order order) {
+        if (!order.isSavedToFile) {
+            System.out.println("파일 저장 실패 → DB 저장 중단됨");
+            return;
+        }
+
+        if (order.id.equals("error")) {
+            throw new RuntimeException("DB 연결 오류");
+        }
+
+        order.isPersistedToDB = true;
+    }
+}
+
