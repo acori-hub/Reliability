@@ -1,17 +1,24 @@
-function createUserProfile(name, ageStr) {
-  const age = parseInt(ageStr);
+async function fetchPosts(page, limit) {
+  const url = `https://api.example.com/posts?page=${page}&limit=${limit}`;
 
-  const user = {
-    name: name.trim(),
-    age: age,
-    createdAt: new Date().toISOString(),
-  };
+  const response = await fetch(url);
+  const data = await response.json();
 
-  console.log("사용자 프로필 생성 완료:", user);
-  return user;
+  console.log(`총 ${data.length}개의 게시물이 로드되었습니다.`);
+  return data;
 }
 
-const inputName = prompt("이름을 입력하세요:");
-const inputAge = prompt("나이를 입력하세요:");
+function main() {
+  const page = parseInt(prompt("페이지 번호를 입력하세요:"));
+  const limit = parseInt(prompt("가져올 게시물 수를 입력하세요:"));
 
-createUserProfile(inputName, inputAge);
+  fetchPosts(page, limit)
+    .then((posts) => {
+      console.log("게시물:", posts);
+    })
+    .catch((err) => {
+      console.error("API 호출 실패:", err);
+    });
+}
+
+main();
