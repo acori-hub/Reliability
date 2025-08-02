@@ -1,16 +1,17 @@
-function registerUser(age, email) {
-  console.log(`User registered with age: ${age}, email: ${email}`);
+function createUserProfile(name, ageStr) {
+  const age = parseInt(ageStr);
+
+  const user = {
+    name: name.trim(),
+    age: age,
+    createdAt: new Date().toISOString(),
+  };
+
+  console.log("사용자 프로필 생성 완료:", user);
+  return user;
 }
 
-function main() {
-  const readline = require("readline-sync");
-  const age = readline.question("Enter your age: ");
-  const email = readline.question("Enter your email: ");
-  registerUser(age, email);
-}
+const inputName = prompt("이름을 입력하세요:");
+const inputAge = prompt("나이를 입력하세요:");
 
-main();
-
-// 문제 설명:
-// age가 숫자가 아닐 수 있고, email 형식 검증 없이 그대로 처리됨.
-// 잘못된 데이터로 인해 이후 기능에서 문제를 유발할 수 있음.
+createUserProfile(inputName, inputAge);
